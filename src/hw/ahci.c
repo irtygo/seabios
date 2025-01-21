@@ -484,7 +484,8 @@ static int ahci_port_setup(struct ahci_port_s *port)
     /* start device */
     cmd |= PORT_CMD_START;
     ahci_port_writel(ctrl, pnr, PORT_CMD, cmd);
-
+    sata_prep_simple(&port->cmd->fis, ATA_CMD_DEVICE_RESET);
+    ahci_command(port, 0, 0, buffer, sizeof(buffer));
     sata_prep_simple(&port->cmd->fis, ATA_CMD_IDENTIFY_PACKET_DEVICE);
     rc = ahci_command(port, 0, 0, buffer, sizeof(buffer));
     if (rc == 0) {
